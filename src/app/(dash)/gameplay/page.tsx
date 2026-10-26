@@ -46,12 +46,12 @@ export default function GameplayPage() {
                   const prev = i > 0 ? data.funnel[i - 1].players : null;
                   const drop = prev ? ((prev - f.players) / prev) * 100 : null;
                   return (
-                    <li key={f.step} className="grid grid-cols-[140px_1fr_auto] items-center gap-3 text-[13px]">
+                    <li key={f.step} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1 text-[13px] sm:grid-cols-[140px_minmax(0,1fr)_150px]">
                       <span className="truncate text-ink-2" title={f.step}>{f.step}</span>
-                      <span className="relative h-6 rounded-[4px] bg-surface-2">
+                      <span className="relative col-span-2 row-start-2 h-6 rounded-[4px] bg-surface-2 sm:col-span-1 sm:col-start-2 sm:row-start-1">
                         <span className="absolute inset-y-0 left-0 rounded-[4px] bg-s1" style={{ width: `${f.pctOfFirst ?? 0}%` }} />
                       </span>
-                      <span className="num w-[150px] text-right text-ink">
+                      <span className="num whitespace-nowrap text-right text-ink sm:col-start-3 sm:row-start-1">
                         {fmtInt(f.players)} <span className="text-ink-3">{f.pctOfFirst !== null ? `${f.pctOfFirst.toFixed(0)}%` : ""}{drop !== null && drop > 0 ? `, −${drop.toFixed(0)}%` : ""}</span>
                       </span>
                     </li>

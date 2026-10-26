@@ -129,7 +129,7 @@ export function CategoryBars({ data, xKey, yKey, label, height = 200, format }: 
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data} margin={{ top: 6, right: 6, bottom: 0, left: 0 }} barCategoryGap={2}>
           <CartesianGrid vertical={false} stroke="var(--color-line)" />
-          <XAxis dataKey={xKey} {...AXIS} interval={0} />
+          <XAxis dataKey={xKey} {...AXIS} interval="preserveStartEnd" minTickGap={6} />
           <YAxis {...AXIS} width={40} allowDecimals={false} />
           <Tooltip
             cursor={{ fill: "var(--color-surface-2)" }}

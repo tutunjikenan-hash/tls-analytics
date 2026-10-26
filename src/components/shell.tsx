@@ -124,8 +124,8 @@ function TopBar({ onMenu }: { onMenu: () => void }) {
       <div className="mx-auto flex max-w-[1440px] flex-wrap items-center gap-2 px-4 py-2.5 sm:px-6">
         <button className="rounded-md p-1.5 text-ink-2 hover:bg-surface-2 lg:hidden" onClick={onMenu} aria-label="Open menu"><Menu className="h-5 w-5" /></button>
         {!rangeless && (
-          <div className="flex flex-wrap items-center gap-2">
-            <div role="radiogroup" aria-label="Date range" className="flex rounded-lg border border-line-strong bg-surface-1 p-0.5">
+          <div className="flex min-w-0 max-w-full flex-wrap items-center gap-2">
+            <div role="radiogroup" aria-label="Date range" className="flex max-w-full overflow-x-auto rounded-lg border border-line-strong bg-surface-1 p-0.5 [scrollbar-width:none]">
               {PRESETS.map((p) => (
                 <button
                   key={p.value}
@@ -133,7 +133,7 @@ function TopBar({ onMenu }: { onMenu: () => void }) {
                   aria-checked={state.range === p.value}
                   onClick={() => set({ range: p.value })}
                   className={cn(
-                    "h-7 rounded-md px-2.5 text-[13px] transition-colors",
+                    "h-7 shrink-0 whitespace-nowrap rounded-md px-2.5 text-[13px] transition-colors",
                     state.range === p.value ? "bg-surface-3 text-ink shadow-[inset_0_-2px_0_var(--color-sodium)]" : "text-ink-2 hover:text-ink",
                   )}
                 >

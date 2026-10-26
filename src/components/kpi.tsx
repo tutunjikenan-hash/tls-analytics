@@ -35,11 +35,11 @@ export function Kpi({ label, value, hint, delta, sub, size = "md", className }: 
 }) {
   return (
     <div className={cn("flex min-w-0 flex-col gap-1.5 rounded-xl border border-line bg-surface-1 px-4 py-3.5", className)}>
-      <div className="flex items-center gap-1.5 text-[13px] text-ink-2">
-        <span className="truncate">{label}</span>
+      <div className="flex items-start gap-1.5 text-[13px] leading-[18px] text-ink-2">
+        <span className="line-clamp-2 min-w-0">{label}</span>
         {hint && <Hint>{hint}</Hint>}
       </div>
-      <div className={cn("num font-semibold tracking-[-0.02em] text-ink", size === "lg" ? "text-[34px] leading-10" : "text-[24px] leading-8")}>{value}</div>
+      <div className={cn("num font-semibold tracking-[-0.02em] text-ink", size === "lg" ? "text-[28px] leading-9 sm:text-[34px] sm:leading-10" : "text-[22px] leading-8 sm:text-[24px]")}>{value}</div>
       <div className="flex min-h-4 flex-wrap items-center gap-x-2">{delta}{sub && <span className="text-[12px] text-ink-3">{sub}</span>}</div>
     </div>
   );

@@ -190,11 +190,11 @@ export function Table({ columns, rows, empty = "Nothing here yet", dense }: {
   if (!rows.length) return <Empty title={empty} />;
   return (
     <div className="-mx-5 overflow-x-auto">
-      <table className="w-full min-w-[520px] border-collapse text-[13px]">
+      <table className="w-full border-collapse text-[13px]">
         <thead>
           <tr className="border-b border-line text-ink-3">
             {columns.map((c) => (
-              <th key={c.key} scope="col" className={cn("px-5 pb-2 font-medium", c.align === "right" ? "text-right" : "text-left", c.className)}>{c.label}</th>
+              <th key={c.key} scope="col" className={cn("whitespace-nowrap px-5 pb-2 font-medium", c.align === "right" ? "text-right" : "text-left", c.className)}>{c.label}</th>
             ))}
           </tr>
         </thead>
@@ -202,7 +202,7 @@ export function Table({ columns, rows, empty = "Nothing here yet", dense }: {
           {rows.map((r, i) => (
             <tr key={i} className="border-b border-line/60 last:border-0 hover:bg-surface-2/60">
               {columns.map((c) => (
-                <td key={c.key} className={cn("px-5 text-ink-2", dense ? "py-1.5" : "py-2.5", c.align === "right" ? "text-right" : "text-left", c.className)}>
+                <td key={c.key} className={cn("whitespace-nowrap px-5 text-ink-2", dense ? "py-1.5" : "py-2.5", c.align === "right" ? "text-right" : "text-left", c.className)}>
                   {c.render ? c.render(r) : (r[c.key] as React.ReactNode)}
                 </td>
               ))}
