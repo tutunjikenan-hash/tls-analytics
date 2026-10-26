@@ -26,3 +26,11 @@ describe("generated pepper", () => {
     }
   });
 });
+
+describe("DATABASE_URL cleanup", () => {
+  it("extracts the URL from common copy-paste shapes", async () => {
+    const { cleanDatabaseUrl } = await import("@/server/env");
+    const u = "postgresql://u:p@ep-x.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require";
+    for (const v of [u, ` ${u}\n`, `DATABASE_URL='${u}'`, `DATABASE_URL="${u}"`, `psql '${u}'`, `'${u}'`]) expect(cleanDatabaseUrl(v)).toBe(u);
+  });
+});

@@ -6,7 +6,12 @@ import { z } from "zod";
  */
 const schema = z.object({
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
-  DATABASE_URL: z.string().min(1, "DATABASE_URL is required"),
+  // Tolerates what provider "copy" buttons often include around the URL (DATABASE_URL=, psql, quotes)
+  DATABASE_URL: z
+    .string()
+    .min(1, "DATABASE_URL is required")
+    .transform((v) => cleanDatabaseUrl(v))
+    .refine((v) => /^postgres(ql)?:\/\//.test(v), "DATABASE_URL must start with postgresql://"),
   DATABASE_SSL: z.enum(["require", "disable", "no-verify"]).default("disable"),
   DATABASE_POOL_MAX: z.coerce.number().int().min(2).max(50).default(10),
   // HMAC pepper that turns Roblox UserIds into pseudonymous player keys. Never change it after
@@ -46,6 +51,12 @@ const schema = z.object({
 });
 
 export type Env = z.infer<typeof schema>;
+
+/** Extracts the postgres URL from e.g. `DATABASE_URL='postgresql://…'` or `psql 'postgresql://…'`. */
+export function cleanDatabaseUrl(raw: string): string {
+  const m = /postgres(?:ql)?:\/\/[^\s'"`]+/.exec(raw);
+  return m ? m[0] : raw.trim();
+}
 
 let cached: Env | null = null;
 
