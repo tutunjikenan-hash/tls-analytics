@@ -1,0 +1,108 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/*
+  TLS Analytics — "night shift" instrument panel.
+  Surfaces are blue-slate night, not tinted black. Sodium-vapour amber (the canopy lights of the
+  station in the game) is reserved for live state and the current selection — never for data.
+  Chart series use the validated categorical palette (dark steps), checked against --surface-1.
+*/
+@theme {
+  --font-sans: "Hanken Grotesk Variable", ui-sans-serif, system-ui, sans-serif;
+
+  --color-night: #10151f;      /* page */
+  --color-surface-1: #161d2a;  /* panels, chart surface */
+  --color-surface-2: #1c2433;  /* raised: inputs, hover */
+  --color-surface-3: #242e40;  /* selected rows, pressed */
+  --color-line: #273043;       /* hairlines */
+  --color-line-strong: #364257;
+  --color-ink: #e6eaf2;        /* primary text */
+  --color-ink-2: #a3acbd;      /* secondary text */
+  --color-ink-3: #78829a;      /* muted text, axis labels */
+  --color-sodium: #f2a93b;     /* live + selection accent */
+  --color-sodium-dim: #f2a93b26;
+
+  /* categorical series (dark steps, validated on #161d2a) */
+  --color-s1: #3987e5;
+  --color-s2: #d95926;
+  --color-s3: #199e70;
+  --color-s4: #c98500;
+  --color-s5: #d55181;
+
+  /* status — reserved, always with icon + label */
+  --color-good: #0ca30c;
+  --color-warning: #fab219;
+  --color-serious: #ec835a;
+  --color-critical: #d03b3b;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  background: var(--color-night);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-feature-settings: "tnum" 1, "cv11" 1;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* numbers line up in every table and tile */
+.num {
+  font-variant-numeric: tabular-nums;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-sodium);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: var(--color-sodium-dim);
+}
+
+@keyframes live-pulse {
+  0% { box-shadow: 0 0 0 0 #f2a93b88; }
+  70% { box-shadow: 0 0 0 6px #f2a93b00; }
+  100% { box-shadow: 0 0 0 0 #f2a93b00; }
+}
+.live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--color-sodium);
+  animation: live-pulse 2s infinite;
+}
+.live-dot[data-stale="true"] {
+  background: var(--color-ink-3);
+  animation: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .live-dot { animation: none; }
+}
+
+/* the canopy: a thin sodium light strip over the live hero */
+.canopy {
+  position: relative;
+}
+.canopy::before {
+  content: "";
+  position: absolute;
+  inset: 0 24px auto 24px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--color-sodium) 20%, var(--color-sodium) 80%, transparent);
+  opacity: 0.85;
+}
+.canopy::after {
+  content: "";
+  position: absolute;
+  inset: 0 10% auto 10%;
+  height: 90px;
+  background: radial-gradient(ellipse at top, #f2a93b1f, transparent 70%);
+  pointer-events: none;
+}
+
+.recharts-wrapper:focus, .recharts-surface:focus { outline: none; }
