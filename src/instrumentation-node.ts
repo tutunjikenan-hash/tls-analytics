@@ -12,6 +12,9 @@ export async function startNode() {
     const ssl = e.DATABASE_SSL === "disable" ? undefined : e.DATABASE_SSL === "no-verify" ? { rejectUnauthorized: false } : { rejectUnauthorized: true };
     await migrate(e.DATABASE_URL, ssl, (m) => console.log(`[migrate] ${m}`));
   }
+  const { pool } = await import("./server/db");
+  const { loadPepper } = await import("./server/pepper");
+  await loadPepper(pool());
   await bootstrapOwner();
   const { startJobs } = await import("./server/jobs/runner");
   startJobs();
@@ -25,7 +28,7 @@ export async function startNode() {
 async function bootstrapOwner() {
   const email = process.env.BOOTSTRAP_OWNER_EMAIL;
   const password = process.env.BOOTSTRAP_OWNER_PASSWORD;
-  if (!email || !password) return;
+  if (!email || !password) return; // without a password the owner is created on the first-time setup screen
   const { pool } = await import("./server/db");
   const { hashPassword, audit } = await import("./server/auth/auth");
   const { rows } = await pool().query(`SELECT count(*)::int AS n FROM users`);

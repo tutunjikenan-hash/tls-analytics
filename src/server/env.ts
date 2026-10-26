@@ -11,7 +11,12 @@ const schema = z.object({
   DATABASE_POOL_MAX: z.coerce.number().int().min(2).max(50).default(10),
   // HMAC pepper that turns Roblox UserIds into pseudonymous player keys. Never change it after
   // launch: every player would look new.
-  PLAYER_ID_PEPPER: z.string().min(32, "PLAYER_ID_PEPPER must be at least 32 characters"),
+  // Optional: when unset, one is generated on first start and stored in the database (see pepper.ts).
+  PLAYER_ID_PEPPER: z
+    .string()
+    .min(32, "PLAYER_ID_PEPPER must be at least 32 characters")
+    .optional()
+    .or(z.literal("").transform(() => undefined)),
   APP_URL: z.string().url().default("http://localhost:3000"),
   COOKIE_SECURE: z
     .enum(["true", "false"])

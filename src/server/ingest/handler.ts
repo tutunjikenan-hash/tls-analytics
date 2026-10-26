@@ -2,6 +2,7 @@ import { pool } from "../db";
 import { env } from "../env";
 import { getSettings } from "../settings";
 import { playerKey, takeToken, verifyKey } from "./keys";
+import { loadPepper } from "../pepper";
 import { processEvents, type KeyedEvent } from "./process";
 import { envelopeSchema, eventSchema, MAX_EVENT_AGE_MS, MAX_EVENT_FUTURE_MS, MAX_SENT_SKEW_MS } from "./schema";
 
@@ -71,6 +72,7 @@ export async function handleIngest(req: IngestRequest): Promise<IngestResponse> 
     return { status: 429, body: { error: "rate_limited" }, headers: { "Retry-After": "10" } };
   }
 
+  const pepper = await loadPepper(pool());
   // per-event validation; invalid events are reported back and skipped
   const valid: KeyedEvent[] = [];
   const errors: string[] = [];
@@ -93,9 +95,9 @@ export async function handleIngest(req: IngestRequest): Promise<IngestResponse> 
     seenInBatch.add(ev.id);
     const keyed = ev as KeyedEvent;
     keyed.at = new Date(ev.ts);
-    if ("uid" in ev && typeof ev.uid === "number") keyed.pk = playerKey(cfg.PLAYER_ID_PEPPER, ev.uid);
+    if ("uid" in ev && typeof ev.uid === "number") keyed.pk = playerKey(pepper, ev.uid);
     if (ev.type === "server_heartbeat") {
-      (keyed as KeyedEvent & { pks: string[] }).pks = ev.d.players.map((p) => playerKey(cfg.PLAYER_ID_PEPPER, p.uid));
+      (keyed as KeyedEvent & { pks: string[] }).pks = ev.d.players.map((p) => playerKey(pepper, p.uid));
     }
     valid.push(keyed);
   });

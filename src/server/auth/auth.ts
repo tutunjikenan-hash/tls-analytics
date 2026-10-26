@@ -2,6 +2,7 @@ import { createHash, createHmac, randomBytes } from "node:crypto";
 import bcrypt from "bcryptjs";
 import { pool } from "../db";
 import { cookieSecure, env } from "../env";
+import { pepperSync } from "../pepper";
 
 /**
  * Dashboard authentication.
@@ -68,7 +69,11 @@ export function hashToken(token: string): Buffer {
 /** Pseudonymous IP for the audit log and rate limiting (never stored raw). */
 export function ipHash(ip: string | null | undefined): string | null {
   if (!ip) return null;
-  return createHmac("sha256", env().PLAYER_ID_PEPPER).update(`ip:${ip}`).digest("hex").slice(0, 16);
+  try {
+    return createHmac("sha256", pepperSync()).update(`ip:${ip}`).digest("hex").slice(0, 16);
+  } catch {
+    return null; // never block a sign-in over the audit log's IP hash
+  }
 }
 
 // Lockout is a backstop against slow distributed guessing; fast guessing is stopped first by the

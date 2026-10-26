@@ -14,9 +14,10 @@ need a session). Set `DATABASE_SSL=require`.
 
 ## 2. Environment variables
 
-See `.env.example`. Required: `DATABASE_URL`, `DATABASE_SSL`, `PLAYER_ID_PEPPER` (32+ random
-characters; never change it later), `APP_URL` (the https URL). For the first start without a shell:
-`BOOTSTRAP_OWNER_EMAIL` + `BOOTSTRAP_OWNER_PASSWORD` (12+ characters) — remove both after you sign in.
+See `.env.example`. Required: `DATABASE_URL`, `DATABASE_SSL`, `APP_URL` (the https URL) and
+`BOOTSTRAP_OWNER_EMAIL` (your email). On the first visit the dashboard shows a one-time setup screen
+where that email creates its password. `PLAYER_ID_PEPPER` is optional: if unset, a random one is
+generated on first start and stored in the database (never change it once players are recorded).
 Optional: `DISCORD_WEBHOOK_URL`, `ROBLOX_UNIVERSE_ID`.
 
 ## 3. Deploy
